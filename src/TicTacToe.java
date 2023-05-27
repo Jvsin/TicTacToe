@@ -13,7 +13,7 @@ public class TicTacToe implements ActionListener {
     int moves = 0;
     Random rand = new Random();
     int whoStart;
-    int playerFlag;
+    boolean playerFlag;
 
     TicTacToe() {
         mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -36,6 +36,7 @@ public class TicTacToe implements ActionListener {
             gameBoard.add(boardButton[i]);
             boardButton[i].addActionListener(this);
             boardButton[i].setBackground(new Color(255, 255, 255));
+            boardButton[i].setFont(new Font("Arial",Font.BOLD,100));
         }
 
         infoPanel.add(textInfo);
@@ -47,18 +48,40 @@ public class TicTacToe implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        for(int i = 0; i < 9; i++){
+            if(e.getSource() == boardButton[i]){
+                if(playerFlag){
+                    if(Objects.equals(boardButton[i].getText(), "")){
+                        boardButton[i].setForeground(new Color(0xFF06AD));
+                        boardButton[i].setText("X");
+                        playerFlag = false;
+                        textInfo.setText("Ruch gracza O!");
+                        // check win
+                    }
+                }
+                else {
+                    if(Objects.equals(boardButton[i].getText(), "")){
+                        boardButton[i].setForeground(new Color(0xFF06AD));
+                        boardButton[i].setText("O");
+                        playerFlag = true;
+                        textInfo.setText("Ruch gracza X!");
+                        // check win
+                    }
+                }
+            }
 
+        }
     }
 
     public void Start(){
         whoStart = rand.nextInt(2);
 
         if(whoStart == 0){
-            playerFlag = 0;
+            playerFlag = false;
             textInfo.setText("ZACZYNA X");
         }
         else {
-            playerFlag = 1;
+            playerFlag = true;
             textInfo.setText("ZACZYNA O");
         }
     }
