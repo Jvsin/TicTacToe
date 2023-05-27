@@ -13,7 +13,7 @@ public class TicTacToe implements ActionListener {
     int moves = 0;
     Random rand = new Random();
     int whoStart;
-    boolean playerFlag;
+    Players playerFlag;
 
     TicTacToe() {
         mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -50,24 +50,24 @@ public class TicTacToe implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         for(int i = 0; i < 9; i++){
             if(e.getSource() == boardButton[i]){
-                if(playerFlag){
+                if(playerFlag == Players.X){
                     if(Objects.equals(boardButton[i].getText(), "")){
-                        boardButton[i].setForeground(new Color(0xFF06AD));
+                        boardButton[i].setForeground(new Color(0xF50707));
                         boardButton[i].setText("X");
-                        playerFlag = false;
+                        playerFlag = Players.O;
                         textInfo.setText("Ruch gracza O!");
-                        // check win
                     }
                 }
                 else {
                     if(Objects.equals(boardButton[i].getText(), "")){
-                        boardButton[i].setForeground(new Color(0xFF06AD));
+                        boardButton[i].setForeground(new Color(0x075AF5));
                         boardButton[i].setText("O");
-                        playerFlag = true;
+                        playerFlag = Players.X;
                         textInfo.setText("Ruch gracza X!");
-                        // check win
                     }
                 }
+                checkWin();
+                moves++;
             }
 
         }
@@ -77,12 +77,95 @@ public class TicTacToe implements ActionListener {
         whoStart = rand.nextInt(2);
 
         if(whoStart == 0){
-            playerFlag = false;
+            playerFlag = Players.X;
             textInfo.setText("ZACZYNA X");
         }
         else {
-            playerFlag = true;
+            playerFlag = Players.O;
             textInfo.setText("ZACZYNA O");
+        }
+    }
+
+    public void checkWin(){
+        if(boardButton[0].getText().equals("X") && boardButton[1].getText().equals("X") && boardButton[2].getText().equals("X")){
+            setWin(Players.X,0,1,2);
+        }
+        else if(boardButton[0].getText().equals("X") && boardButton[3].getText().equals("X") && boardButton[6].getText().equals("X")){
+            setWin(Players.X,0,3,6);
+        }
+        else if(boardButton[0].getText().equals("X") && boardButton[4].getText().equals("X") && boardButton[8].getText().equals("X")){
+            setWin(Players.X,0,4,8);
+        }
+        else if(boardButton[1].getText().equals("X") && boardButton[4].getText().equals("X") && boardButton[7].getText().equals("X")){
+            setWin(Players.X,1,4,7);
+        }
+        else if(boardButton[2].getText().equals("X") && boardButton[5].getText().equals("X") && boardButton[8].getText().equals("X")){
+            setWin(Players.X,2,5,8);
+        }
+        else if(boardButton[3].getText().equals("X") && boardButton[4].getText().equals("X") && boardButton[5].getText().equals("X")){
+            setWin(Players.X,3,4,5);
+        }
+        else if(boardButton[6].getText().equals("X") && boardButton[7].getText().equals("X") && boardButton[8].getText().equals("X")){
+            setWin(Players.X,6,7,8);
+        }
+        else if(boardButton[2].getText().equals("X") && boardButton[4].getText().equals("X") && boardButton[6].getText().equals("X")){
+            setWin(Players.X,2,4,6);
+        }
+
+        else if(boardButton[0].getText().equals("O") && boardButton[1].getText().equals("O") && boardButton[2].getText().equals("O")){
+            setWin(Players.O,0,1,2);
+        }
+        else if(boardButton[0].getText().equals("O") && boardButton[3].getText().equals("O") && boardButton[6].getText().equals("O")){
+            setWin(Players.O,0,3,6);
+        }
+        else if(boardButton[0].getText().equals("O") && boardButton[4].getText().equals("O") && boardButton[8].getText().equals("O")){
+            setWin(Players.O,0,4,8);
+        }
+        else if(boardButton[1].getText().equals("O") && boardButton[4].getText().equals("O") && boardButton[7].getText().equals("O")){
+            setWin(Players.O,1,4,7);
+        }
+        else if(boardButton[2].getText().equals("O") && boardButton[5].getText().equals("O") && boardButton[8].getText().equals("O")){
+            setWin(Players.O,2,5,8);
+        }
+        else if(boardButton[3].getText().equals("O") && boardButton[4].getText().equals("O") && boardButton[5].getText().equals("O")){
+            setWin(Players.O,3,4,5);
+        }
+        else if(boardButton[6].getText().equals("O") && boardButton[7].getText().equals("O") && boardButton[8].getText().equals("O")){
+            setWin(Players.O,6,7,8);
+        }
+        else if(boardButton[2].getText().equals("O") && boardButton[4].getText().equals("O") && boardButton[6].getText().equals("O")){
+            setWin(Players.O,2,4,6);
+        }
+        else if(moves == 9){
+            setWin(Players.TIE,0,0,0);
+        }
+    }
+
+    public void setWin(Players winner,int x1,int x2, int x3){
+        if(winner == Players.X){
+            boardButton[x1].setBackground(new Color(0xF50707));
+            boardButton[x1].setForeground(new Color(0xF4F4F6));
+            boardButton[x2].setBackground(new Color(0xF50707));
+            boardButton[x2].setForeground(new Color(0xF4F4F6));
+            boardButton[x3].setBackground(new Color(0xF50707));
+            boardButton[x3].setForeground(new Color(0xF4F4F6));
+            textInfo.setText("Wygrał X!");
+        }
+        else if(winner == Players.O) {
+            boardButton[x1].setBackground(new Color(0x075AF5));
+            boardButton[x1].setForeground(new Color(0xF4F4F6));
+            boardButton[x2].setBackground(new Color(0x075AF5));
+            boardButton[x2].setForeground(new Color(0xF4F4F6));
+            boardButton[x3].setBackground(new Color(0x075AF5));
+            boardButton[x3].setForeground(new Color(0xF4F4F6));
+            textInfo.setText("Wygrał O!");
+        }
+        else {
+            for(int i = 0; i < 9; i++){
+                boardButton[i].setBackground(new Color(0x78808C));
+                boardButton[i].setForeground(new Color(0x000000));
+            }
+            textInfo.setText("Remis!");
         }
     }
 }
