@@ -20,6 +20,7 @@ public class TicTacToe implements ActionListener {
         mainWindow.setSize(1000,1000);
         mainWindow.getContentPane().setBackground(new Color(255,255,255));
         mainWindow.setVisible(true);
+        mainWindow.setTitle("Kółko i krzyżyk");
 
         infoPanel.setLayout(new BorderLayout());
         infoPanel.setBounds(0,0,1000,200);
@@ -66,8 +67,8 @@ public class TicTacToe implements ActionListener {
                         textInfo.setText("Ruch gracza X!");
                     }
                 }
-                checkWin();
                 moves++;
+                checkWin();
             }
 
         }
@@ -83,6 +84,28 @@ public class TicTacToe implements ActionListener {
         else {
             playerFlag = Players.O;
             textInfo.setText("ZACZYNA O");
+        }
+    }
+    public void endGame(Players result){
+        String message;
+        if(result == Players.X){
+            message = "Wygral X!";
+        }
+        else if(result == Players.O){
+            message = "Wygral Y!";
+        }
+        else {
+            message = "Remis!";
+        }
+        Object[] buttons ={"Restart","Wyjdź"};
+        int check = JOptionPane.showOptionDialog(mainWindow, message + "\nChcesz zagrac jeszcze raz?","Koniec gry!",JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null,buttons,buttons[0]);
+
+        if(check == 0){
+            mainWindow.dispose();
+            new TicTacToe();
+        }
+        else{
+            mainWindow.dispose();
         }
     }
 
@@ -111,7 +134,6 @@ public class TicTacToe implements ActionListener {
         else if(boardButton[2].getText().equals("X") && boardButton[4].getText().equals("X") && boardButton[6].getText().equals("X")){
             setWin(Players.X,2,4,6);
         }
-
         else if(boardButton[0].getText().equals("O") && boardButton[1].getText().equals("O") && boardButton[2].getText().equals("O")){
             setWin(Players.O,0,1,2);
         }
@@ -167,5 +189,6 @@ public class TicTacToe implements ActionListener {
             }
             textInfo.setText("Remis!");
         }
+        endGame(winner);
     }
 }
