@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+import java.util.Timer;
 import javax.swing.*;
 
 public class TicTacToe implements ActionListener {
@@ -9,11 +10,15 @@ public class TicTacToe implements ActionListener {
     JPanel gameBoard = new JPanel();
     JLabel textInfo = new JLabel();
     JButton[] boardButton = new JButton[9];
-
+    JPanel timePanel = new JPanel();
+    Timer timer;
+    int timerOfX = 0;
+    int timerOfO = 0;
     int moves = 0;
     Random rand = new Random();
     int whoStart;
     Players playerFlag;
+    boolean endGameFlag = false;
 
     TicTacToe() {
         mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -25,12 +30,18 @@ public class TicTacToe implements ActionListener {
         infoPanel.setLayout(new BorderLayout());
         infoPanel.setBounds(0,0,1000,200);
 
+        timePanel.setLayout(new BorderLayout());
+        timePanel.setBounds(0,0,1000,200);
+
         textInfo.setBackground(new Color(255,255,255));
         textInfo.setForeground(new Color(255,0,0));
         textInfo.setHorizontalAlignment(JLabel.CENTER);
         textInfo.setFont(new Font( "Arial",Font.BOLD,50));
 
         gameBoard.setLayout(new GridLayout(3,3));
+
+        timer = new Timer();
+        timer.scheduleAtFixedRate(new Timers(),0,1000);
 
         for(int i = 0; i < 9; i++){
             boardButton[i] = new JButton();
@@ -41,11 +52,14 @@ public class TicTacToe implements ActionListener {
         }
 
         infoPanel.add(textInfo);
+
         mainWindow.add(infoPanel, BorderLayout.NORTH);
         mainWindow.add(gameBoard);
+        mainWindow.add(timePanel,BorderLayout.SOUTH);
 
         Start();
     }
+
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -56,7 +70,6 @@ public class TicTacToe implements ActionListener {
                         boardButton[i].setForeground(new Color(0xF50707));
                         boardButton[i].setText("X");
                         playerFlag = Players.O;
-                        textInfo.setText("Ruch gracza O!");
                     }
                 }
                 else {
@@ -64,7 +77,6 @@ public class TicTacToe implements ActionListener {
                         boardButton[i].setForeground(new Color(0x075AF5));
                         boardButton[i].setText("O");
                         playerFlag = Players.X;
-                        textInfo.setText("Ruch gracza X!");
                     }
                 }
                 moves++;
@@ -98,8 +110,8 @@ public class TicTacToe implements ActionListener {
             message = "Remis!";
         }
         Object[] buttons ={"Restart","Wyjdź"};
-        int check = JOptionPane.showOptionDialog(mainWindow, message + "\nChcesz zagrac jeszcze raz?","Koniec gry!",JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null,buttons,buttons[0]);
-
+        int check = JOptionPane.showOptionDialog(mainWindow, message + "\nChcesz zagrac jeszcze raz?","Koniec gry!",
+                JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null,buttons,buttons[0]);
         if(check == 0){
             mainWindow.dispose();
             new TicTacToe();
@@ -164,6 +176,7 @@ public class TicTacToe implements ActionListener {
     }
 
     public void setWin(Players winner,int x1,int x2, int x3){
+        endGameFlag = true;
         if(winner == Players.X){
             boardButton[x1].setBackground(new Color(0xF50707));
             boardButton[x1].setForeground(new Color(0xF4F4F6));
@@ -190,5 +203,33 @@ public class TicTacToe implements ActionListener {
             textInfo.setText("Remis!");
         }
         endGame(winner);
+    }
+
+
+    private class Timers extends TimerTask {
+        @Override
+        public void run() {
+            if ( moves > 0 && !endGameFlag) {
+                if (playerFlag == Players.O) {
+                    timerOfO++;
+                    if(timerOfO < 10){
+                        textInfo.setText("Ruch gracza O! " + "Czas: 00:0" + timerOfO);
+                    }
+                    else {
+                        textInfo.setText("Ruch gracza O! " + "Czas: 00:" + timerOfO);
+                    }
+                }
+                else {
+                    timerOfX++;
+                    if(timerOfX < 10){
+                        textInfo.setText("Ruch gracza X! " + "Czas: 00:0" + timerOfX);
+                    }
+                    else {
+                        textInfo.setText("Ruch gracza X! " + "Czas: 00:" + timerOfX);
+                    }
+                }
+                textInfo.repaint();
+            }
+        }
     }
 }
