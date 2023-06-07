@@ -54,7 +54,7 @@ public class TicTacToe implements ActionListener {
         gameBoard.setLayout(new GridLayout(3,3));
 
         timer = new Timer();
-        timer.scheduleAtFixedRate(new Timers(),0,1000);
+        timer.scheduleAtFixedRate(new readString(),0,1000);
 
         for(int i = 0; i < 9; i++){
             boardButton[i] = new JButton();
