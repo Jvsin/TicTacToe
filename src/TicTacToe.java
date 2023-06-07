@@ -1,8 +1,15 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.*;
 import java.util.Timer;
 import javax.swing.*;
+import static java.lang.System.exit;
 
 public class TicTacToe implements ActionListener {
     JFrame mainWindow = new JFrame();
@@ -20,7 +27,13 @@ public class TicTacToe implements ActionListener {
     Players playerFlag;
     boolean endGameFlag = false;
 
+    Socket socket = null;
+    PrintWriter sender = null;
+    BufferedReader reader = null;
+
     TicTacToe() {
+        connectToServer();
+
         mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainWindow.setSize(1000,1000);
         mainWindow.getContentPane().setBackground(new Color(255,255,255));
@@ -49,6 +62,7 @@ public class TicTacToe implements ActionListener {
             boardButton[i].addActionListener(this);
             boardButton[i].setBackground(new Color(255, 255, 255));
             boardButton[i].setFont(new Font("Arial",Font.BOLD,100));
+            boardButton[i].setText(" ");
         }
 
         infoPanel.add(textInfo);
@@ -60,29 +74,40 @@ public class TicTacToe implements ActionListener {
         Start();
     }
 
+    public void connectToServer () {
+        try {
+            socket = new Socket("localhost", 1234);
+        } catch (UnknownHostException e) {
+            exit(1);
+        } catch (IOException e) {
+            exit(2);
+        }
+
+        try {
+            reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            sender = new PrintWriter(socket.getOutputStream(), true);
+        } catch (IOException e) {
+            System.out.println("Nie udało się wysłać danych");
+            System.out.println("Koniec programu");
+            exit(3);
+        }
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         for(int i = 0; i < 9; i++){
             if(e.getSource() == boardButton[i]){
-                if(playerFlag == Players.X){
-                    if(Objects.equals(boardButton[i].getText(), "")){
-                        boardButton[i].setForeground(new Color(0xF50707));
-                        boardButton[i].setText("X");
-                        playerFlag = Players.O;
-                    }
-                }
-                else {
-                    if(Objects.equals(boardButton[i].getText(), "")){
+                if(playerFlag == Players.O) {
+                    if (Objects.equals(boardButton[i].getText(), " ")) {
                         boardButton[i].setForeground(new Color(0x075AF5));
                         boardButton[i].setText("O");
+                        sendString();
                         playerFlag = Players.X;
+                        moves++;
+                        checkWin();
                     }
                 }
-                moves++;
-                checkWin();
             }
-
         }
     }
 
@@ -203,6 +228,41 @@ public class TicTacToe implements ActionListener {
             textInfo.setText("Remis!");
         }
         endGame(winner);
+    }
+
+    private void sendString() {
+        sender.println("Start");
+        String s = "";
+        for ( int i = 0 ; i < 9 ; i++) {
+            s += boardButton[i].getText();
+        }
+        sender.println(s);
+    }
+
+
+    private class readString extends TimerTask {
+        @Override
+        public void run() {
+            try {
+                if(!reader.ready()) {
+                    mainWindow.repaint();
+                    return;
+                }
+
+                String wejscie = reader.readLine();
+                if (wejscie.equals("Start")) {
+                    String s = reader.readLine();
+                    for (int i = 0 ; i < 9 ; i++) {
+                        boardButton[i].setText(String.valueOf(s.charAt(i)));
+                    }
+                    checkWin();
+                    playerFlag = Players.O;
+                }
+            } catch (IOException e) {
+                exit(4);
+            }
+            mainWindow.repaint();
+        }
     }
 
 
