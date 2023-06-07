@@ -22,8 +22,8 @@ public class TicTacToe implements ActionListener {
     int timerOfX = 0;
     int timerOfO = 0;
     int moves = 0;
-    Random rand = new Random();
-    int whoStart;
+    //Random rand = new Random();
+    //int whoStart;
     Players playerFlag;
     boolean endGameFlag = false;
 
@@ -54,6 +54,7 @@ public class TicTacToe implements ActionListener {
         gameBoard.setLayout(new GridLayout(3,3));
 
         timer = new Timer();
+        timer.scheduleAtFixedRate(new Timers(),0,1000);
         timer.scheduleAtFixedRate(new readString(),0,1000);
 
         for(int i = 0; i < 9; i++){
@@ -76,10 +77,11 @@ public class TicTacToe implements ActionListener {
 
     public void connectToServer () {
         try {
-            socket = new Socket("localhost", 1234);
+            socket = new Socket("localhost", 2137);
         } catch (UnknownHostException e) {
             exit(1);
         } catch (IOException e) {
+            System.out.println(e);
             exit(2);
         }
 
@@ -87,8 +89,6 @@ public class TicTacToe implements ActionListener {
             reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             sender = new PrintWriter(socket.getOutputStream(), true);
         } catch (IOException e) {
-            System.out.println("Nie udało się wysłać danych");
-            System.out.println("Koniec programu");
             exit(3);
         }
     }
@@ -103,7 +103,6 @@ public class TicTacToe implements ActionListener {
                         boardButton[i].setText("O");
                         sendString();
                         playerFlag = Players.X;
-                        moves++;
                         checkWin();
                     }
                 }
@@ -112,38 +111,43 @@ public class TicTacToe implements ActionListener {
     }
 
     public void Start(){
-        whoStart = rand.nextInt(2);
-
-        if(whoStart == 0){
-            playerFlag = Players.X;
-            textInfo.setText("ZACZYNA X");
-        }
-        else {
-            playerFlag = Players.O;
-            textInfo.setText("ZACZYNA O");
-        }
+        playerFlag = Players.X;
+        textInfo.setText("ZACZYNA X");
     }
-    public void endGame(Players result){
+    public void endGame(Players result)  {
         String message;
         if(result == Players.X){
             message = "Wygral X!";
         }
         else if(result == Players.O){
-            message = "Wygral Y!";
+            message = "Wygral O!";
         }
         else {
             message = "Remis!";
         }
-        Object[] buttons ={"Restart","Wyjdź"};
-        int check = JOptionPane.showOptionDialog(mainWindow, message + "\nChcesz zagrac jeszcze raz?","Koniec gry!",
-                JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null,buttons,buttons[0]);
-        if(check == 0){
-            mainWindow.dispose();
-            new TicTacToe();
+        message += "\nAby zagrać ponownie, połącz się z serwerem jeszcze raz";
+        JOptionPane.showMessageDialog(null,message);
+        try{
+            socket.close();
+            sender.close();
+            reader.close();
         }
-        else{
-            mainWindow.dispose();
+        catch(IOException e){
+            System.out.println("Closing client error");
+            exit(2);
         }
+
+        mainWindow.dispose();
+//        Object[] buttons ={"Restart","Wyjdź"};
+//        int check = JOptionPane.showOptionDialog(mainWindow, message + "\nChcesz zagrac jeszcze raz?","Koniec gry!",
+//                JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null,buttons,buttons[0]);
+//        if(check == 0){
+//            mainWindow.dispose();
+//            new TicTacToe();
+//        }
+//        else{
+//            mainWindow.dispose();
+//        }
     }
 
     public void checkWin(){
@@ -196,6 +200,7 @@ public class TicTacToe implements ActionListener {
             setWin(Players.O,2,4,6);
         }
         else if(moves == 9){
+            sendString();
             setWin(Players.TIE,0,0,0);
         }
     }
@@ -254,14 +259,20 @@ public class TicTacToe implements ActionListener {
                     String s = reader.readLine();
                     for (int i = 0 ; i < 9 ; i++) {
                         boardButton[i].setText(String.valueOf(s.charAt(i)));
+                        if(!String.valueOf(s.charAt(i)).equals(" ")){
+                            moves++;
+                        }
                     }
-                    checkWin();
+                    System.out.println(moves);
                     playerFlag = Players.O;
+                    checkWin();
+                    moves = 0;
                 }
             } catch (IOException e) {
                 exit(4);
             }
             mainWindow.repaint();
+            textInfo.repaint();
         }
     }
 
@@ -269,7 +280,7 @@ public class TicTacToe implements ActionListener {
     private class Timers extends TimerTask {
         @Override
         public void run() {
-            if ( moves > 0 && !endGameFlag) {
+            if ( moves >= 0 && !endGameFlag) {
                 if (playerFlag == Players.O) {
                     timerOfO++;
                     if(timerOfO < 10){
