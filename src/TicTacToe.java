@@ -1,8 +1,15 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.*;
 import java.util.Timer;
 import javax.swing.*;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
+import static java.lang.System.exit;
 
 public class TicTacToe implements ActionListener {
     JFrame mainWindow = new JFrame();
@@ -20,7 +27,14 @@ public class TicTacToe implements ActionListener {
     Players playerFlag;
     boolean endGameFlag = false;
 
+    public ServerSocket serverSocket = null;
+    public Socket clientSocket = null;
+    public PrintWriter sender;
+    public BufferedReader reader;
+
     TicTacToe() {
+        settingConnection();
+
         mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainWindow.setSize(1000,1000);
         mainWindow.getContentPane().setBackground(new Color(255,255,255));
@@ -49,6 +63,7 @@ public class TicTacToe implements ActionListener {
             boardButton[i].addActionListener(this);
             boardButton[i].setBackground(new Color(255, 255, 255));
             boardButton[i].setFont(new Font("Arial",Font.BOLD,100));
+            boardButton[i].setText(" ");
         }
 
         infoPanel.add(textInfo);
@@ -60,27 +75,39 @@ public class TicTacToe implements ActionListener {
         Start();
     }
 
+    public void settingConnection () {
+        try {
+            serverSocket = new ServerSocket(2137);
+        } catch (IOException e) {
+            exit(1);
+        }
+        try {
+            clientSocket = serverSocket.accept();
+        } catch (IOException e) {
+            exit(1);
+        }
 
+        try {
+            sender = new PrintWriter(clientSocket.getOutputStream(), true);
+            reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+        } catch (IOException e) {
+            exit(3);
+        }
+    }
     @Override
     public void actionPerformed(ActionEvent e) {
         for(int i = 0; i < 9; i++){
             if(e.getSource() == boardButton[i]){
                 if(playerFlag == Players.X){
-                    if(Objects.equals(boardButton[i].getText(), "")){
+                    if(Objects.equals(boardButton[i].getText(), " ")){
                         boardButton[i].setForeground(new Color(0xF50707));
                         boardButton[i].setText("X");
+                        sendString();
                         playerFlag = Players.O;
+                        moves++;
+                        checkWin();
                     }
                 }
-                else {
-                    if(Objects.equals(boardButton[i].getText(), "")){
-                        boardButton[i].setForeground(new Color(0x075AF5));
-                        boardButton[i].setText("O");
-                        playerFlag = Players.X;
-                    }
-                }
-                moves++;
-                checkWin();
             }
 
         }
@@ -203,6 +230,42 @@ public class TicTacToe implements ActionListener {
             textInfo.setText("Remis!");
         }
         endGame(winner);
+    }
+
+    private void sendString() {
+        sender.println("Start");
+        String mess = "";
+        for ( int i = 0 ; i < 9 ; i++) {
+            mess += boardButton[i].getText();
+        }
+        sender.println(mess);
+    }
+
+    private class readString extends TimerTask {
+        @Override
+        public void run() {
+            try {
+                if(!reader.ready()) {
+                    mainWindow.repaint();
+                    return;
+                }
+
+                String mess = reader.readLine();
+                if (mess.equals("Start")) {
+                    String s = reader.readLine();
+                    for (int i = 0 ; i < 9 ; i++) {
+                        boardButton[i].setText(String.valueOf(s.charAt(i)));
+                    }
+                    playerFlag = Players.X;
+                    checkWin();
+                }
+            } catch (IOException e) {
+                System.out.println("Nie udało się odczytać danych");
+                System.out.println("Koniec programu");
+                exit(4);
+            }
+            mainWindow.repaint();
+        }
     }
 
 
