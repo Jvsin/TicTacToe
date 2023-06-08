@@ -179,37 +179,37 @@ public class TicTacToe implements ActionListener {
     }
 
     public void checkWin(Players player1, Players player2) {
-        if (boardButton[0].getText().equals("X") && boardButton[1].getText().equals("X") && boardButton[2].getText().equals("X")) {System.out.println("tu wlaze1");
+        if (boardButton[0].getText().equals("X") && boardButton[1].getText().equals("X") && boardButton[2].getText().equals("X")) {
             setWin(player1, 0, 1, 2);
-        } else if (boardButton[0].getText().equals("X") && boardButton[3].getText().equals("X") && boardButton[6].getText().equals("X")) {System.out.println("tu wlaze2");
+        } else if (boardButton[0].getText().equals("X") && boardButton[3].getText().equals("X") && boardButton[6].getText().equals("X")) {
             setWin(player1, 0, 3, 6);
-        } else if (boardButton[0].getText().equals("X") && boardButton[4].getText().equals("X") && boardButton[8].getText().equals("X")) {System.out.println("tu wlaze3");
+        } else if (boardButton[0].getText().equals("X") && boardButton[4].getText().equals("X") && boardButton[8].getText().equals("X")) {
             setWin(player1, 0, 4, 8);
-        } else if (boardButton[1].getText().equals("X") && boardButton[4].getText().equals("X") && boardButton[7].getText().equals("X")) {System.out.println("tu wlaze4");
+        } else if (boardButton[1].getText().equals("X") && boardButton[4].getText().equals("X") && boardButton[7].getText().equals("X")) {
             setWin(player1, 1, 4, 7);
-        } else if (boardButton[2].getText().equals("X") && boardButton[5].getText().equals("X") && boardButton[8].getText().equals("X")) {System.out.println("tu wlaz5e");
+        } else if (boardButton[2].getText().equals("X") && boardButton[5].getText().equals("X") && boardButton[8].getText().equals("X")) {
             setWin(player1, 2, 5, 8);
-        } else if (boardButton[3].getText().equals("X") && boardButton[4].getText().equals("X") && boardButton[5].getText().equals("X")) {System.out.println("tu wlaze6");
+        } else if (boardButton[3].getText().equals("X") && boardButton[4].getText().equals("X") && boardButton[5].getText().equals("X")) {
             setWin(player1, 3, 4, 5);
-        } else if (boardButton[6].getText().equals("X") && boardButton[7].getText().equals("X") && boardButton[8].getText().equals("X")) {System.out.println("tu wlaze7");
+        } else if (boardButton[6].getText().equals("X") && boardButton[7].getText().equals("X") && boardButton[8].getText().equals("X")) {
             setWin(player1, 6, 7, 8);
-        } else if (boardButton[2].getText().equals("X") && boardButton[4].getText().equals("X") && boardButton[6].getText().equals("X")) {System.out.println("tu wlaze8");
+        } else if (boardButton[2].getText().equals("X") && boardButton[4].getText().equals("X") && boardButton[6].getText().equals("X")) {
             setWin(player1, 2, 4, 6);
-        } else if (boardButton[0].getText().equals("O") && boardButton[1].getText().equals("O") && boardButton[2].getText().equals("O")) {System.out.println("tu wlaze9");
+        } else if (boardButton[0].getText().equals("O") && boardButton[1].getText().equals("O") && boardButton[2].getText().equals("O")) {
             setWin(player2, 0, 1, 2);
-        } else if (boardButton[0].getText().equals("O") && boardButton[3].getText().equals("O") && boardButton[6].getText().equals("O")) {System.out.println("tu wlaze10");
+        } else if (boardButton[0].getText().equals("O") && boardButton[3].getText().equals("O") && boardButton[6].getText().equals("O")) {
             setWin(player2, 0, 3, 6);
-        } else if (boardButton[0].getText().equals("O") && boardButton[4].getText().equals("O") && boardButton[8].getText().equals("O")) {System.out.println("tu wlaze11");
+        } else if (boardButton[0].getText().equals("O") && boardButton[4].getText().equals("O") && boardButton[8].getText().equals("O")) {
             setWin(player2, 0, 4, 8);
-        } else if (boardButton[1].getText().equals("O") && boardButton[4].getText().equals("O") && boardButton[7].getText().equals("O")) {System.out.println("tu wlaze12");
+        } else if (boardButton[1].getText().equals("O") && boardButton[4].getText().equals("O") && boardButton[7].getText().equals("O")) {
             setWin(player2, 1, 4, 7);
-        } else if (boardButton[2].getText().equals("O") && boardButton[5].getText().equals("O") && boardButton[8].getText().equals("O")) {System.out.println("tu wlaze13");
+        } else if (boardButton[2].getText().equals("O") && boardButton[5].getText().equals("O") && boardButton[8].getText().equals("O")) {
             setWin(player2, 2, 5, 8);
-        } else if (boardButton[3].getText().equals("O") && boardButton[4].getText().equals("O") && boardButton[5].getText().equals("O")) {System.out.println("tu wlaze14");
+        } else if (boardButton[3].getText().equals("O") && boardButton[4].getText().equals("O") && boardButton[5].getText().equals("O")) {
             setWin(player2, 3, 4, 5);
-        } else if (boardButton[6].getText().equals("O") && boardButton[7].getText().equals("O") && boardButton[8].getText().equals("O")) {System.out.println("tu wlaze15");
+        } else if (boardButton[6].getText().equals("O") && boardButton[7].getText().equals("O") && boardButton[8].getText().equals("O")) {
             setWin(player2, 6, 7, 8);
-        } else if (boardButton[2].getText().equals("O") && boardButton[4].getText().equals("O") && boardButton[6].getText().equals("O")) {System.out.println("tu wlaze16");
+        } else if (boardButton[2].getText().equals("O") && boardButton[4].getText().equals("O") && boardButton[6].getText().equals("O")) {
             setWin(player2, 2, 4, 6);
         } else if (moves == 9) {
             setWin(Players.TIE, 0, 0, 0);
@@ -350,19 +350,29 @@ public class TicTacToe implements ActionListener {
         @Override
         public void run() {
             if (moves > 0 && !endGameFlag) {
-                if (playerFlag == Players.O) {
-                    timerOfO++;
-                    if (timerOfO < 10) {
-                        textInfo.setText("Ruch gracza O! " + "Czas: 00:0" + timerOfO);
+                if(!botFlag){
+                    if (playerFlag == Players.O) {
+                        timerOfO++;
+                        if (timerOfO < 10) {
+                            textInfo.setText("Ruch gracza O! " + "Czas: 00:0" + timerOfO);
+                        } else {
+                            textInfo.setText("Ruch gracza O! " + "Czas: 00:" + timerOfO);
+                        }
                     } else {
-                        textInfo.setText("Ruch gracza O! " + "Czas: 00:" + timerOfO);
+                        timerOfX++;
+                        if (timerOfX < 10) {
+                            textInfo.setText("Ruch gracza X! " + "Czas: 00:0" + timerOfX);
+                        } else {
+                            textInfo.setText("Ruch gracza X! " + "Czas: 00:" + timerOfX);
+                        }
                     }
-                } else {
+                }
+                else {
                     timerOfX++;
                     if (timerOfX < 10) {
-                        textInfo.setText("Ruch gracza X! " + "Czas: 00:0" + timerOfX);
+                        textInfo.setText("Czas: 00:0" + timerOfX);
                     } else {
-                        textInfo.setText("Ruch gracza X! " + "Czas: 00:" + timerOfX);
+                        textInfo.setText("Czas: 00:" + timerOfX);
                     }
                 }
                 textInfo.repaint();
