@@ -1,5 +1,7 @@
 public enum Players {
     X,
     O,
-    TIE
+    TIE,
+    PLAYER,
+    BOT
 }
