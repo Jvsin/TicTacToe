@@ -284,19 +284,19 @@ public class TicTacToe implements ActionListener {
                 if (playerFlag == Players.O) {
                     timerOfO++;
                     if(timerOfO < 10){
-                        textInfo.setText("Ruch gracza O! " + "Czas: 00:0" + timerOfO);
+                        textInfo.setText("Twój ruch! " + "Twój czas: 00:0" + timerOfO);
                     }
                     else {
-                        textInfo.setText("Ruch gracza O! " + "Czas: 00:" + timerOfO);
+                        textInfo.setText("Twój ruch! " + "Twój czas: 00:" + timerOfO);
                     }
                 }
                 else {
                     timerOfX++;
                     if(timerOfX < 10){
-                        textInfo.setText("Ruch gracza X! " + "Czas: 00:0" + timerOfX);
+                        textInfo.setText("Ruch przeciwnika. " + "Twój czas: 00:0" + timerOfO);
                     }
                     else {
-                        textInfo.setText("Ruch gracza X! " + "Czas: 00:" + timerOfX);
+                        textInfo.setText("Ruch przeciwnika " + "Twój czas: 00:" + timerOfO);
                     }
                 }
                 textInfo.repaint();
