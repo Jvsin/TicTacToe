@@ -102,15 +102,8 @@ public class TicTacToe implements ActionListener {
                             System.out.println("tu wlaze B" + i);
                             checkWin(Players.BOT, Players.PLAYER);
                         }
+                        playerFlag = Players.BOT;
                         botMove();
-                        moves++;
-                        if (playerSymbol == Players.X) {
-                            System.out.println("tu wlaze XX" + i);
-                            checkWin(Players.PLAYER, Players.BOT);
-                        } else {
-                            System.out.println("tu wlaze BB" + i);
-                            checkWin(Players.BOT, Players.PLAYER);
-                        }
                     }
                 }
             }
@@ -139,9 +132,10 @@ public class TicTacToe implements ActionListener {
                 textInfo.setText("ZACZYNASZ");
                 playerSymbol = Players.X;
             } else {
-                playerFlag = Players.PLAYER;
+                playerFlag = Players.BOT;
                 textInfo.setText("TWOJA KOLEJ");
                 playerSymbol = Players.O;
+                botMove();
             }
         }
 
@@ -171,9 +165,15 @@ public class TicTacToe implements ActionListener {
         int check = JOptionPane.showOptionDialog(mainWindow, message + "\nChcesz zagrac jeszcze raz?", "Koniec gry!",
                 JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[0]);
         if (check == 0) {
+            for(int i = 0; i < 9; i++){
+                boardButton[i].setText("");
+            }
             mainWindow.dispose();
             new TicTacToe();
         } else {
+            for(int i = 0; i < 9; i++){
+                boardButton[i].setText("");
+            }
             mainWindow.dispose();
         }
     }
@@ -336,6 +336,13 @@ public class TicTacToe implements ActionListener {
                     break;
             }
         }
+        moves++;
+        if (playerSymbol == Players.X) {
+            checkWin(Players.PLAYER, Players.BOT);
+        } else {
+            checkWin(Players.BOT, Players.PLAYER);
+        }
+        playerFlag = Players.PLAYER;
     }
 
 
