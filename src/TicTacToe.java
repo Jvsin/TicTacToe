@@ -137,8 +137,6 @@ public class TicTacToe implements ActionListener {
             try{
                 clientSocket.close();
                 serverSocket.close();
-//                reader.close();
-//                sender.close();
             }
             catch(IOException e){
                 System.out.println(e);
@@ -296,19 +294,19 @@ public class TicTacToe implements ActionListener {
                 if (playerFlag == Players.O) {
                     timerOfO++;
                     if(timerOfO < 10){
-                        textInfo.setText("Ruch gracza O! " + "Czas: 00:0" + timerOfO);
+                        textInfo.setText("Ruch przeciwnika. " + "Twój czas: 00:0" + timerOfX);
                     }
                     else {
-                        textInfo.setText("Ruch gracza O! " + "Czas: 00:" + timerOfO);
+                        textInfo.setText("Ruch przeciwnika. " + "Twój czas: 00:" + timerOfX);
                     }
                 }
                 else {
                     timerOfX++;
                     if(timerOfX < 10){
-                        textInfo.setText("Ruch gracza X! " + "Czas: 00:0" + timerOfX);
+                        textInfo.setText("Twój ruch! " + "Twój czas: 00:0" + timerOfX);
                     }
                     else {
-                        textInfo.setText("Ruch gracza X! " + "Czas: 00:" + timerOfX);
+                        textInfo.setText("Twój ruch! " + "Twój czas: 00:" + timerOfX);
                     }
                 }
                 textInfo.repaint();
